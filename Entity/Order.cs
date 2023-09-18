@@ -8,5 +8,7 @@
         public int UserId { get; set; }
 
         public virtual ICollection<OrderDetail> OrderDetail { get; set; }
+        public virtual Users User { get; set; }
+
     }
 }
