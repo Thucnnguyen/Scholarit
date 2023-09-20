@@ -5,8 +5,10 @@
         public string Type { get; set; }
         public string Url { get; set; }
         public int ChapterId { get; set; }
+        public int? ResourceParentId { get; set; }
         
         public virtual Chapter Chapter { get; set; }
+        public virtual Resource ResourceParent { get; set; }
 
     }
 }

@@ -64,7 +64,7 @@ namespace AlumniProject.Data.Repostitory.RepositoryImp
         public async Task<PagingResultDTO<T>> GetAllByConditionAsync(
             int pageNo,
             int pageSize,
-            Expression<Func<T, bool>>[] filters,
+            Expression<Func<T, bool>> filter,
             Expression<Func<T, object>> orderBy,
             bool descending = false
             )
@@ -72,10 +72,7 @@ namespace AlumniProject.Data.Repostitory.RepositoryImp
             var skipAmount = (pageNo - 1) * pageSize;
             var query = _context.Set<T>().AsQueryable();
 
-            foreach (var filter in filters)
-            {
-                query = query.Where(filter);
-            }
+            query = query.Where(filter);
 
             if (orderBy != null)
             {
@@ -101,16 +98,13 @@ namespace AlumniProject.Data.Repostitory.RepositoryImp
         }
 
         public async Task<IEnumerable<T>> GetAllByConditionAsync(
-            Expression<Func<T, bool>>[] filters,
+            Expression<Func<T, bool>> filter,
             Expression<Func<T, object>> orderBy,
-            bool descending = false)
+            bool descending)
         {
             var query = _context.Set<T>().AsQueryable();
 
-            foreach (var filter in filters)
-            {
                 query = query.Where(filter);
-            }
 
             if (orderBy != null)
             {

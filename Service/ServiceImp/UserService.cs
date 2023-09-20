@@ -77,14 +77,12 @@ namespace Scholarit.Service.ServiceImp
 
         public async Task<Users> UpdateUsers(Users users)
         {
-                // check if the user exists in the database
                 var existingUser = await _repo.FindOneByCondition(u => u.Id == users.Id && u.IsDeleted == false);
                 if (existingUser == null)
                 {
                     throw new NotFoundException("User not found with id: " + users.Id);
                 }
 
-                // update the user properties with the new values
                 existingUser.FullName = users.FullName;
                 existingUser.Dob = users.Dob;
                 existingUser.Address = users.Address;
@@ -97,10 +95,8 @@ namespace Scholarit.Service.ServiceImp
                 existingUser.AvatarUrl = users.AvatarUrl;
                 existingUser.RoleId = users.RoleId;
 
-                // save the changes to the database
                 await _repo.UpdateAsync(existingUser);
 
-                // return the updated user
                 return existingUser;
 
         }

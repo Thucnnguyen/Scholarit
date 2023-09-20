@@ -8,13 +8,14 @@ namespace AlumniProject.Data.Repostitory
         Task<PagingResultDTO<T>> GetAllByConditionAsync(
             int pageNo, 
             int pageSize,
-            Expression<Func<T, bool>>[] filters,
+            Expression<Func<T, bool>> filters,
             Expression<Func<T, object>> orderBy,
-            bool descending = false
+            bool descending
             );
-        Task<IEnumerable<T>> GetAllByConditionAsync( Expression<Func<T, bool>>[] filters, 
+        Task<IEnumerable<T>> GetAllByConditionAsync( 
+            Expression<Func<T, bool>> filters, 
             Expression<Func<T, object>> orderBy,
-            bool descending = false);
+            bool descending);
         Task<int> CreateAsync(T entity);
         Task UpdateAsync(T entity);
         Task DeleteByIdAsync(int id);
