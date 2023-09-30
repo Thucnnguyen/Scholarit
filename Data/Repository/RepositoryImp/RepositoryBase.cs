@@ -104,7 +104,7 @@ namespace AlumniProject.Data.Repostitory.RepositoryImp
         {
             var query = _context.Set<T>().AsQueryable();
 
-                query = query.Where(filter);
+            query = query.Where(filter);
 
             if (orderBy != null)
             {
@@ -141,6 +141,78 @@ namespace AlumniProject.Data.Repostitory.RepositoryImp
             await _context.SaveChangesAsync();
         }
 
+        public async Task<PagingResultDTO<T>> GetAllByConditionAsync(int pageNo, int pageSize, Expression<Func<T, bool>> filter, Expression<Func<T, object>> orderBy, bool descending, params Expression<Func<T, object>>[] includeProperties)
+        {
+            var skipAmount = (pageNo - 1) * pageSize;
+            var query = _context.Set<T>().AsQueryable();
 
+            query = query.Where(filter);
+
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+
+            if (orderBy != null)
+            {
+                if (descending)
+                {
+                    query = query.OrderByDescending(orderBy);
+                }
+                else { query = query.OrderBy(orderBy); }
+            }
+
+
+            var entities = await query.Skip(skipAmount).Take(pageSize).ToListAsync();
+            var total = await query.CountAsync();
+            var result = new PagingResultDTO<T>
+            {
+                CurrentPage = pageNo,
+                Items = entities,
+                PageSize = pageSize,
+                TotalItems = total
+            };
+            return result;
+        }
+
+        public async Task<IEnumerable<T>> GetAllByConditionAsync(Expression<Func<T, bool>> filter, Expression<Func<T, object>> orderBy, bool descending, params Expression<Func<T, object>>[] includeProperties)
+        {
+            var query = _context.Set<T>().AsQueryable();
+
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+
+            query = query.Where(filter);
+
+            if (orderBy != null)
+            {
+                if (descending)
+                {
+                    query = query.OrderByDescending(orderBy);
+                }
+                else { query = query.OrderBy(orderBy); }
+            }
+
+            var entities = await query.ToListAsync();
+
+            return entities;
+        }
+
+        public async Task<T> FindOneByCondition(Expression<Func<T, bool>> filter, params Expression<Func<T, object>>[] includeProperties)
+        {
+            var query = _context.Set<T>().AsQueryable();
+
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+
+            query = query.Where(filter);
+
+            var entities = await query.FirstOrDefaultAsync();
+            return entities;
+        }
     }
 }

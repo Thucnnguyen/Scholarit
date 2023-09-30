@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scholarit.Migrations
 {
-    public partial class initDb : Migration
+    public partial class initDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -38,6 +38,7 @@ namespace Scholarit.Migrations
                     Option3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Option4 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Option5 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ChapterId = table.Column<int>(type: "int", nullable: false),
                     Answer = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -53,6 +54,7 @@ namespace Scholarit.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -74,6 +76,7 @@ namespace Scholarit.Migrations
                     Price = table.Column<double>(type: "float", nullable: false),
                     Discount = table.Column<int>(type: "int", nullable: false),
                     NumberOfChapter = table.Column<int>(type: "int", nullable: false),
+                    CoverImgUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -156,7 +159,6 @@ namespace Scholarit.Migrations
                     Status = table.Column<int>(type: "int", nullable: false),
                     Note = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    UsersId = table.Column<int>(type: "int", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -164,10 +166,35 @@ namespace Scholarit.Migrations
                 {
                     table.PrimaryKey("PK_Order", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Order_User_UsersId",
-                        column: x => x.UsersId,
+                        name: "FK_Order_User_UserId",
+                        column: x => x.UserId,
                         principalTable: "User",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ChapterQuestion",
+                columns: table => new
+                {
+                    ChapterId = table.Column<int>(type: "int", nullable: false),
+                    QuestionsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChapterQuestion", x => new { x.ChapterId, x.QuestionsId });
+                    table.ForeignKey(
+                        name: "FK_ChapterQuestion_Chapter_ChapterId",
+                        column: x => x.ChapterId,
+                        principalTable: "Chapter",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ChapterQuestion_Question_QuestionsId",
+                        column: x => x.QuestionsId,
+                        principalTable: "Question",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -204,6 +231,7 @@ namespace Scholarit.Migrations
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ChapterId = table.Column<int>(type: "int", nullable: false),
+                    ResourceParentId = table.Column<int>(type: "int", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -216,6 +244,11 @@ namespace Scholarit.Migrations
                         principalTable: "Chapter",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Resources_Resources_ResourceParentId",
+                        column: x => x.ResourceParentId,
+                        principalTable: "Resources",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -226,8 +259,8 @@ namespace Scholarit.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OrderId = table.Column<int>(type: "int", nullable: false),
                     CourseId = table.Column<int>(type: "int", nullable: false),
-                    Rate = table.Column<double>(type: "float", nullable: false),
-                    FeedBack = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Rate = table.Column<double>(type: "float", nullable: true),
+                    FeedBack = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CourseName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -383,6 +416,11 @@ namespace Scholarit.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ChapterQuestion_QuestionsId",
+                table: "ChapterQuestion",
+                column: "QuestionsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Course_CategoryId",
                 table: "Course",
                 column: "CategoryId");
@@ -408,9 +446,9 @@ namespace Scholarit.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Order_UsersId",
+                name: "IX_Order_UserId",
                 table: "Order",
-                column: "UsersId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderDetail_CourseId",
@@ -463,6 +501,11 @@ namespace Scholarit.Migrations
                 column: "ChapterId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Resources_ResourceParentId",
+                table: "Resources",
+                column: "ResourceParentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_User_RoleId",
                 table: "User",
                 column: "RoleId");
@@ -470,6 +513,9 @@ namespace Scholarit.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ChapterQuestion");
+
             migrationBuilder.DropTable(
                 name: "Enroll");
 

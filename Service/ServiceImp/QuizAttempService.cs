@@ -5,7 +5,7 @@ using Scholarit.Entity;
 
 namespace Scholarit.Service.ServiceImp
 {
-    public class QuizAttempService : IQuizAttempService
+    public class QuizAttempService : IQuizAttemptService
     {
         private readonly IQuizAttemptRepo _repo;
         private readonly IQuizService quizService;

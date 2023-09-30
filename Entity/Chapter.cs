@@ -11,6 +11,7 @@
 
         public virtual Course Course { get; set; }
         public virtual ICollection<Quiz> Quiz { get; set; }
+        public virtual ICollection<Question> Questions { get; set; }
         public virtual ICollection<Resource> Resource { get; set; }
         public virtual ICollection<Enroll> Enroll { get; set; }
     }

@@ -22,6 +22,21 @@ namespace Scholarit.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("ChapterQuestion", b =>
+                {
+                    b.Property<int>("ChapterId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuestionsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ChapterId", "QuestionsId");
+
+                    b.HasIndex("QuestionsId");
+
+                    b.ToTable("ChapterQuestion");
+                });
+
             modelBuilder.Entity("Scholarit.Entity.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -99,6 +114,9 @@ namespace Scholarit.Migrations
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
+
+                    b.Property<string>("CoverImgUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DateCreated")
                         .HasColumnType("datetime2");
@@ -227,7 +245,6 @@ namespace Scholarit.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FeedBack")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -236,7 +253,7 @@ namespace Scholarit.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<double>("Rate")
+                    b.Property<double?>("Rate")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
@@ -259,6 +276,9 @@ namespace Scholarit.Migrations
                     b.Property<string>("Answer")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ChapterId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DateCreated")
                         .HasColumnType("datetime2");
@@ -458,6 +478,9 @@ namespace Scholarit.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("ResourceParentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -469,6 +492,8 @@ namespace Scholarit.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ChapterId");
+
+                    b.HasIndex("ResourceParentId");
 
                     b.ToTable("Resources");
                 });
@@ -486,6 +511,10 @@ namespace Scholarit.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -546,6 +575,21 @@ namespace Scholarit.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("ChapterQuestion", b =>
+                {
+                    b.HasOne("Scholarit.Entity.Chapter", null)
+                        .WithMany()
+                        .HasForeignKey("ChapterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Scholarit.Entity.Question", null)
+                        .WithMany()
+                        .HasForeignKey("QuestionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Scholarit.Entity.Chapter", b =>
@@ -711,7 +755,13 @@ namespace Scholarit.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Scholarit.Entity.Resource", "ResourceParent")
+                        .WithMany()
+                        .HasForeignKey("ResourceParentId");
+
                     b.Navigation("Chapter");
+
+                    b.Navigation("ResourceParent");
                 });
 
             modelBuilder.Entity("Scholarit.Entity.Users", b =>

@@ -25,7 +25,7 @@ namespace Scholarit.Service.ServiceImp
 
             string pass = _passwordHelper.HashPassword(users.Password);
             users.Password = pass;
-
+            users.DateCreated = DateTime.Now;
             var idNew = await _repo.CreateAsync(users);
             return idNew;
         }
@@ -48,12 +48,18 @@ namespace Scholarit.Service.ServiceImp
         public async Task<Users> GetUsers(string email, string password)
         {
             var passwordHash = _passwordHelper.HashPassword(password);
+
             var user = await _repo.FindOneByCondition(
-                u => u.Email == email && 
-                u.IsDeleted == false &&
-                u.Password == passwordHash);
+                _ => _.Email == email && 
+                _.IsDeleted == false,
+                _ => _.Role);
 
             if(user == null)
+            {
+                throw new NotFoundException("Email or password is wrong!");
+            }
+
+            if (!_passwordHelper.CheckHashPwd(password, user.Password))
             {
                 throw new NotFoundException("Email or password is wrong!");
             }
@@ -65,7 +71,8 @@ namespace Scholarit.Service.ServiceImp
         {
             var user = await _repo.FindOneByCondition(
                 u => u.Email == email &&
-                u.IsDeleted == false );
+                u.IsDeleted == false,
+                _ => _.Role);
 
             if (user == null)
             {
@@ -73,6 +80,16 @@ namespace Scholarit.Service.ServiceImp
             }
 
             return user;
+        }
+
+        public async Task<Users> GetUsersById(int id)
+        {
+            var existingUser = await _repo.FindOneByCondition(u => u.Id == id && u.IsDeleted == false);
+            if (existingUser == null)
+            {
+                throw new NotFoundException("User not found with id: " + id);
+            }
+            return existingUser;
         }
 
         public async Task<Users> UpdateUsers(Users users)
@@ -90,10 +107,9 @@ namespace Scholarit.Service.ServiceImp
                 existingUser.LastLogin = users.LastLogin;
                 existingUser.LearnHourPerDay = users.LearnHourPerDay;
                 existingUser.Strength = users.Strength;
-                existingUser.Email = users.Email;
                 existingUser.Password = users.Password;
                 existingUser.AvatarUrl = users.AvatarUrl;
-                existingUser.RoleId = users.RoleId;
+                
 
                 await _repo.UpdateAsync(existingUser);
 

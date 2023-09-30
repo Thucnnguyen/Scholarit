@@ -18,21 +18,33 @@ namespace Scholarit.Service.ServiceImp
         public async Task<int> AddChapter(Chapter chapter)
         {
             var course = await _courseService.GetCourseByID(chapter.CourseId);
+
             var NewChapterId = await _repo.CreateAsync(chapter);
+            course.NumberOfChapter++;
+            course.Duration += chapter.Duration; 
+            await _courseService.UpdateCourse(course);
+
             return NewChapterId;
         }
 
         public async Task<bool> DeleteChapterById(int id)
         {
             var chapter = await GetChapterByID(id);
+            var course = await _courseService.GetCourseByID(chapter.CourseId);
+            chapter.IsDeleted = true;
+            course.NumberOfChapter--;
+            
+            course.Duration -= chapter.Duration;
 
-            await _repo.DeleteByIdAsync(id);
+            await _courseService.UpdateCourse(course);
+
+            await _repo.UpdateAsync(chapter);
             return true;
         }
 
-        public async Task<PagingResultDTO<Chapter>> GetAllByCourseId(int pageNo, int pageSize, int courseId, bool desdescending)
+        public async Task<IEnumerable<Chapter>> GetAllByCourseId(int courseId, bool desdescending)
         {
-            var chapter = await _repo.GetAllByConditionAsync(pageNo, pageSize, c => c.CourseId == courseId && !c.IsDeleted, c => c.Id, desdescending);
+            var chapter = await _repo.GetAllByConditionAsync(c => c.CourseId == courseId && !c.IsDeleted, c => c.Order, desdescending);
             return chapter != null ? chapter : throw new NotFoundException("Chapter Not found with courseId: " + courseId);
         }
 
@@ -45,14 +57,19 @@ namespace Scholarit.Service.ServiceImp
         public async Task<Chapter> UpdateChapter(Chapter updatedChapter)
         {
             var existingChapter = await GetChapterByID(updatedChapter.Id);
+            var course = await _courseService.GetCourseByID(updatedChapter.CourseId);
             existingChapter.Name = updatedChapter.Name;
             existingChapter.Description = updatedChapter.Description;
             existingChapter.Content = updatedChapter.Content;
             existingChapter.Duration = updatedChapter.Duration;
             existingChapter.Order = updatedChapter.Order;
             existingChapter.CourseId = updatedChapter.CourseId;
-
             await _repo.UpdateAsync(existingChapter);
+
+            course.Duration += existingChapter.Duration;
+            await _courseService.UpdateCourse(course);
+
+
             return existingChapter;
         }
     }

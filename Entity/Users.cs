@@ -12,7 +12,7 @@
         public string Email { get; set; }
         public string Password { get; set; }
         public string? AvatarUrl { get; set; }
-        public int RoleId { get; set; }
+        public int RoleId { get; set; } = 2;
 
         public virtual Role Role { get; set; }
         public virtual ICollection<Order> Order { get; set; }

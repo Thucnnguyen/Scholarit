@@ -9,5 +9,7 @@ namespace Scholarit.Service
         Task<bool> DeleteCourse(int id);
         Task<int> AddCourse(Course course);
         Task<Course> GetCourseByID(int id);
+        Task<PagingResultDTO<Course>> GetAllCourses(int pageNo,int pageSize);
+
     }
 }

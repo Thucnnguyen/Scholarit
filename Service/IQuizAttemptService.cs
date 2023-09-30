@@ -3,7 +3,7 @@ using Scholarit.Entity;
 
 namespace Scholarit.Service
 {
-    public interface IQuizAttempService
+    public interface IQuizAttemptService
     {
         Task<PagingResultDTO<QuizAttempt>> GetAllByUserId(int pageNo, int pageSize, bool desdescending, int userId);
         Task<QuizAttempt> UpdateQuizAttempt(QuizAttempt quizAttempt);

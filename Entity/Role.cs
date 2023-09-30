@@ -1,7 +1,7 @@
 ﻿namespace Scholarit.Entity
 {
-    public class Role :BaseEntity
+    public class Role : BaseEntity
     {
-        public string Name;
+        public string Name { get; set; }
     }
 }
