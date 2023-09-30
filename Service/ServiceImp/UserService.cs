@@ -45,6 +45,13 @@ namespace Scholarit.Service.ServiceImp
 
         }
 
+        public async Task<IEnumerable<Users>> GetAllAsync()
+        {
+            var users = await _repo.GetAllAsync();
+            var result = users.Where(existingUser => existingUser.IsDeleted == false);      
+            return result;
+        }
+
         public async Task<Users> GetUsers(string email, string password)
         {
             var passwordHash = _passwordHelper.HashPassword(password);

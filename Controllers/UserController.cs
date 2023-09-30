@@ -67,5 +67,13 @@ namespace Scholarit.Controllers
         //public void Delete(int id)
         //{
         //}
+
+
+        [HttpGet]    // get all user where isdeleted = false
+        public async Task<IActionResult> GetAllAsync()
+        {
+            var result = await _userService.GetAllAsync();
+            return Ok(_mapper.Map<List<UserDto>>(result));
+        }
     }
 }

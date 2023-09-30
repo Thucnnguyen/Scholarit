@@ -12,5 +12,7 @@ namespace Scholarit.Service
         Task<bool> DeleteUsers(int id);
         Task<int> AddUsers(Users users);
 
+        Task<IEnumerable<Users>> GetAllAsync();
+
     }
 }

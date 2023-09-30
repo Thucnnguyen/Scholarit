@@ -9,7 +9,7 @@ using Scholarit.Service;
 namespace Scholarit.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController] 
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _service;
