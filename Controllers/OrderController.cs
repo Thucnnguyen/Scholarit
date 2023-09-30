@@ -32,6 +32,15 @@ namespace Scholarit.Controllers
         }
 
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
+        {
+            var result = await _orderService.GetOrderById(id);
+            if (result is null) return NotFound();
+            return Ok(_mapper.Map<OrderDTO>(result));
+        }
+
+
         [HttpGet("page")]
         public async Task<ActionResult<PagingResultDTO<OrderDTO>>> Get(
              [FromQuery, Range(1, int.MaxValue), Required(ErrorMessage = "pageNo is Required")] int pageNo = 1,

@@ -2,6 +2,7 @@
 using AlumniProject.Dto;
 using Microsoft.EntityFrameworkCore;
 using Scholarit.Entity;
+using System.Linq.Expressions;
 
 namespace Scholarit.Data.Repository.RepositoryImp
 {
@@ -32,6 +33,22 @@ namespace Scholarit.Data.Repository.RepositoryImp
         public override async Task<IEnumerable<Order>> GetAllAsync()
         {
             return await _context.Set<Order>().Include(o => o.User).Include(o => o.OrderDetail).ToListAsync();
+        }
+
+
+        public override async Task<Order> FindOneByCondition(Expression<Func<Order, bool>> filter, params Expression<Func<Order, object>>[] includeProperties)
+        {
+            var query = _context.Set<Order>().AsQueryable();
+
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+
+            query = query.Where(filter);
+
+            var entities = await query.Include(o => o.User).Include(o => o.OrderDetail).FirstOrDefaultAsync();
+            return entities;
         }
     }
 }

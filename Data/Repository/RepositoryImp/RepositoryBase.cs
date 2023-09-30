@@ -204,7 +204,7 @@ namespace AlumniProject.Data.Repostitory.RepositoryImp
             return entities;
         }
 
-        public async Task<T> FindOneByCondition(Expression<Func<T, bool>> filter, params Expression<Func<T, object>>[] includeProperties)
+        public virtual async Task<T> FindOneByCondition(Expression<Func<T, bool>> filter, params Expression<Func<T, object>>[] includeProperties)
         {
             var query = _context.Set<T>().AsQueryable();
 
