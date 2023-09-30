@@ -22,9 +22,17 @@ namespace Scholarit.Controllers
             _mapper = mapper;
         }
 
-
-        
         [HttpGet]
+        public async Task<IActionResult> GetAllAsync()
+        {
+
+            var orders = await _orderService.GetOrdersAsync();
+
+            return Ok(_mapper.Map<List<OrderDTO>>(orders));
+        }
+
+
+        [HttpGet("page")]
         public async Task<ActionResult<PagingResultDTO<OrderDTO>>> Get(
              [FromQuery, Range(1, int.MaxValue), Required(ErrorMessage = "pageNo is Required")] int pageNo = 1,
             [FromQuery, Range(1, int.MaxValue), Required(ErrorMessage = "pageSize is Required")] int pageSize = 10

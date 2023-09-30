@@ -51,6 +51,13 @@ namespace Scholarit.Service.ServiceImp
             return existingOrder != null ? existingOrder : throw new NotFoundException("Order not found with id: " + id);
         }
 
+        public async Task<IEnumerable<Order>> GetOrdersAsync()
+        {
+            var orders = await _repo.GetAllAsync();
+
+            return orders;  
+        }
+
         public async Task<Order> UpdateOrderStatus(Order order)
         {
             var existingOrder = await GetOrderById(order.Id);

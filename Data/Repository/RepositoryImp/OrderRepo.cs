@@ -27,5 +27,11 @@ namespace Scholarit.Data.Repository.RepositoryImp
             };
             return result;
         }
+
+
+        public override async Task<IEnumerable<Order>> GetAllAsync()
+        {
+            return await _context.Set<Order>().Include(o => o.User).Include(o => o.OrderDetail).ToListAsync();
+        }
     }
 }

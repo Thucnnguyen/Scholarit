@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Scholarit.Data;
 using Scholarit.Entity;
 using System.Linq.Expressions;
@@ -236,6 +237,11 @@ namespace AlumniProject.Data.Repostitory.RepositoryImp
                 TotalItems = total
             };
             return result;
+        }
+
+        public virtual async Task<IEnumerable<T>> GetAllAsync()
+        {
+            return await _context.Set<T>().ToListAsync();
         }
     }
 }

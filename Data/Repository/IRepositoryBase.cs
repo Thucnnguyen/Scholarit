@@ -45,6 +45,6 @@ namespace AlumniProject.Data.Repostitory
 
         Task<int> CountByCondition(params Expression<Func<T, bool>>[] filters);
         Task CreateRangeAsync(List<T> entities);
-        //Task<IEnumerable<T>> GetAllAsync();
+        Task<IEnumerable<T>> GetAllAsync();
     }
 }
