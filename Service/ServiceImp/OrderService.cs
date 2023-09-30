@@ -39,6 +39,12 @@ namespace Scholarit.Service.ServiceImp
             return orderListByUserId;
         }
 
+        public async Task<PagingResultDTO<Order>> GetAllOrders(int pageNo, int pageSize)
+        {
+            var orders = await _repo.GetPaginationAsync(pageNo, pageSize);
+            return orders;
+        }
+
         public async Task<Order> GetOrderById(int id)
         {
             var existingOrder = await _repo.FindOneByCondition(_ => _.Id == id && !_.IsDeleted);

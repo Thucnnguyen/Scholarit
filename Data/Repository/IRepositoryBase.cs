@@ -13,6 +13,8 @@ namespace AlumniProject.Data.Repostitory
             bool descending
             );
 
+        Task<PagingResultDTO<T>> GetPaginationAsync(int pageIndex, int pageSize);
+
         Task<PagingResultDTO<T>> GetAllByConditionAsync(
             int pageNo,
             int pageSize,
@@ -43,5 +45,6 @@ namespace AlumniProject.Data.Repostitory
 
         Task<int> CountByCondition(params Expression<Func<T, bool>>[] filters);
         Task CreateRangeAsync(List<T> entities);
+        //Task<IEnumerable<T>> GetAllAsync();
     }
 }

@@ -1,6 +1,9 @@
 ﻿using AlumniProject.Dto;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Scholarit.Data;
+using Scholarit.Entity;
 using System.Linq.Expressions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
@@ -8,7 +11,7 @@ namespace AlumniProject.Data.Repostitory.RepositoryImp
 {
     public class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
-        private readonly ScholaritDbContext _context;
+        protected readonly ScholaritDbContext _context;
         public RepositoryBase(ScholaritDbContext context)
         {
             _context = context;
@@ -213,6 +216,26 @@ namespace AlumniProject.Data.Repostitory.RepositoryImp
 
             var entities = await query.FirstOrDefaultAsync();
             return entities;
+        }
+
+        public virtual async Task<PagingResultDTO<T>> GetPaginationAsync(int pageNo, int pageSize)
+        {
+            var skipAmount = (pageNo - 1) * pageSize;
+            var query = _context.Set<T>().AsQueryable();
+
+         
+
+
+            var entities = await query.Skip(skipAmount).Take(pageSize).ToListAsync();
+            var total = await query.CountAsync();
+            var result = new PagingResultDTO<T>
+            {
+                CurrentPage = pageNo,
+                Items = entities,
+                PageSize = pageSize,
+                TotalItems = total
+            };
+            return result;
         }
     }
 }

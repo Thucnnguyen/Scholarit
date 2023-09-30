@@ -50,6 +50,7 @@ builder.Services.AddTransient<IQuizService, QuizService>();
 builder.Services.AddTransient<IResourceService, ResourceService>();
 builder.Services.AddTransient<IRoleService, RoleService>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IOrderService, OrderService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
