@@ -12,6 +12,12 @@ namespace Scholarit.Service.ServiceImp
             _roleRepo = roleRepo;
         }
 
+        public async Task<int> AddRole(Role role)
+        {
+            var newRoleId = await _roleRepo.CreateAsync(role);
+            return newRoleId;
+        }
+
         public async Task<Role> GetRoleById(int id)
         {
             var role = await _roleRepo.FindOneByCondition(r => r.Id == id);
@@ -23,6 +29,13 @@ namespace Scholarit.Service.ServiceImp
             var roles = await _roleRepo.GetAllAsync();
 
             return roles;
+        }
+
+        public async Task<bool> IsExistNameRole(string name)
+        {
+            var role = await _roleRepo.FindOneByCondition(r => r.Name.Equals(name) && r.IsDeleted == false);    
+            if(role is null) return false;
+            return role != null;    
         }
     }
 }

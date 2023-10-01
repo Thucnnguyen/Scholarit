@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Scholarit.DTO;
+using Scholarit.Entity;
 using Scholarit.Service;
+using Scholarit.Service.ServiceImp;
 
 namespace Scholarit.Controllers
 {
@@ -24,6 +26,26 @@ namespace Scholarit.Controllers
         {
             var roles = await _service.GetRolesAsync();
             return Ok(roles.Select(_ => _mapper.Map<RoleDTO>(_)));
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult<int>> Post([FromBody] RoleAddDTO roleAddDTO)
+        {
+            var role = _mapper.Map<Role>(roleAddDTO);
+            // check exists role name 
+            var existsName = await _service.IsExistNameRole(roleAddDTO.Name);
+            if (existsName == true)
+            {
+                return BadRequest("That name role already exists");
+
+            }
+            // add new role
+          
+            var newId = await _service.AddRole(role);
+            return Ok(newId);
+          
+
         }
     }
 }

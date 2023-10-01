@@ -7,5 +7,9 @@ namespace Scholarit.Service
         Task<Role> GetRoleById(int id);
 
         Task<IEnumerable<Role>> GetRolesAsync();
+
+        Task<bool> IsExistNameRole(string name);
+
+        Task<int> AddRole(Role role);
     }
 }
