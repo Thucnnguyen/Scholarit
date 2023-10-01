@@ -94,5 +94,20 @@ namespace Scholarit.Controllers
                 TotalItems = userList.TotalItems
             });
         }
+
+        [HttpDelete("{id}")]  // its mean update isdeleted = false
+        public async Task<IActionResult> DeleteUser([FromRoute] int id)
+        {
+            var exitsUser = await _userService.GetUsersById(id);
+            if (exitsUser == null) return NotFound("Not found user");
+
+            var isdelete = await _userService.DeleteUsers(id);
+            if(isdelete == false) return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Delete Failed. Error Server." });
+
+
+            return Ok();
+        }
+
+
     }
 }
