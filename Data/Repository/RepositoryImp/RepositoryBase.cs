@@ -65,7 +65,7 @@ namespace AlumniProject.Data.Repostitory.RepositoryImp
 
         }
 
-        public async Task<PagingResultDTO<T>> GetAllByConditionAsync(
+        public virtual async Task<PagingResultDTO<T>> GetAllByConditionAsync(
             int pageNo,
             int pageSize,
             Expression<Func<T, bool>> filter,

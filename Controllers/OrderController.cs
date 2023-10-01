@@ -57,5 +57,23 @@ namespace Scholarit.Controllers
                 TotalItems = orderList.TotalItems
             });
         }
+
+        [HttpGet("by-user/{userid}")]
+        public async Task<ActionResult<PagingResultDTO<OrderDTO>>> GetByUserAsync([FromRoute] int userid,
+          [FromQuery, Range(1, int.MaxValue), Required(ErrorMessage = "pageNo is Required")] int pageNo = 1,
+       [FromQuery, Range(1, int.MaxValue), Required(ErrorMessage = "pageSize is Required")] int pageSize = 10
+         )
+        {
+            var orderList = await _orderService.GetAllOrderByUser(userid, pageNo, pageSize);
+            var oderListDTO = orderList.Items.Select(_ => _mapper.Map<OrderDTO>(_));
+            return Ok(new PagingResultDTO<OrderDTO>()
+            {
+                CurrentPage = orderList.CurrentPage,
+                PageSize = orderList.PageSize,
+                Items = oderListDTO.ToList(),
+                TotalItems = orderList.TotalItems
+            });
+
+        }
     }
 }

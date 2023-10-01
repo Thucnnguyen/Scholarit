@@ -6,6 +6,7 @@ namespace Scholarit.Service
     public interface IOrderService
     {
         Task<PagingResultDTO<Order>> GetAllOrders(int pageNo, int pageSize);
+        Task<PagingResultDTO<Order>> GetAllOrderByUser(int userId, int pageNo, int pageSize);
 
         Task<IEnumerable<Order>> GetOrdersAsync();
         Task<Order> UpdateOrderStatus(Order order);
