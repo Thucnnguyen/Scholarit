@@ -34,8 +34,8 @@ namespace Scholarit.Service.ServiceImp
 
         public async Task<Role?> GetRoleById(int id)
         {
-            var role = await _roleRepo.FindOneByCondition(r => r.Id == id);
-            return role != null ? role : throw new NotFoundException("Role not found with id: " + id) ;
+            var role = await _roleRepo.FindOneByCondition(r => r.Id == id && r.IsDeleted == false);
+            return role != null ? role : throw new NotFoundException("Role not found with id: " + id);
         }
 
         public async Task<IEnumerable<Role>> GetRolesAsync()
@@ -45,11 +45,24 @@ namespace Scholarit.Service.ServiceImp
             return roles;
         }
 
-        public async Task<bool> IsExistNameRole(string name)
+        public async Task<Role?> IsExistNameRole(string name)
         {
-            var role = await _roleRepo.FindOneByCondition(r => r.Name.Equals(name) && r.IsDeleted == false);    
-            if(role is null) return false;
-            return role != null;    
+            var role = await _roleRepo.FindOneByCondition(r => r.Name.Equals(name) && r.IsDeleted == false);
+            return role;
+        }
+
+        public async Task<Role> UpdateRole(int id, Role role)
+        {
+            var exists = await GetRoleById(id);
+            if (exists != null)
+            {
+                
+                exists.Name = role.Name;
+            }
+            _roleRepo.UpdateAsync(exists);
+
+            return exists;
+
         }
     }
 }

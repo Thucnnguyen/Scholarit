@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Scholarit.DTO;
 using Scholarit.Entity;
 using Scholarit.Service;
@@ -35,7 +36,7 @@ namespace Scholarit.Controllers
             var role = _mapper.Map<Role>(roleAddDTO);
             // check exists role name 
             var existsName = await _service.IsExistNameRole(roleAddDTO.Name);
-            if (existsName == true)
+            if (existsName != null)
             {
                 return BadRequest("That name role already exists");
 
@@ -59,6 +60,26 @@ namespace Scholarit.Controllers
 
 
             return Ok("Delete successful");
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateAsync([FromRoute] int id, [FromBody] RoleUpdateDTO roleUpdateDTO)
+        {
+            var existRole = await _service.GetRoleById(id);
+            if (existRole is null) return NotFound();
+            var roleUpdate = _mapper.Map<Role>(roleUpdateDTO);
+           
+            var existsName = await _service.IsExistNameRole(roleUpdateDTO.Name);
+            if (existsName != null && existsName.Id != id)
+            {
+                return BadRequest("That name role already exists");
+
+            }
+
+
+            var result = await _service.UpdateRole(id, roleUpdate);
+            if (result != null) return Ok(_mapper.Map<RoleDTO>(result));
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Update role failed. Server Error." });
         }
     }
 }
