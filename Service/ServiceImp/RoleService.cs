@@ -17,5 +17,12 @@ namespace Scholarit.Service.ServiceImp
             var role = await _roleRepo.FindOneByCondition(r => r.Id == id);
             return role != null ? role : throw new NotFoundException("Role not found with id: " + id) ;
         }
+
+        public async Task<IEnumerable<Role>> GetRolesAsync()
+        {
+            var roles = await _roleRepo.GetAllAsync();
+
+            return roles;
+        }
     }
 }

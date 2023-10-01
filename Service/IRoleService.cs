@@ -5,5 +5,7 @@ namespace Scholarit.Service
     public interface IRoleService
     {
         Task<Role> GetRoleById(int id);
+
+        Task<IEnumerable<Role>> GetRolesAsync();
     }
 }

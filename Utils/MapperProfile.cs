@@ -29,7 +29,9 @@ namespace Scholarit.Utils
             CreateMap<ResourceUpdateDTO, Resource>().ReverseMap();
             CreateMap<OrderDTO, Order>().ReverseMap();
             CreateMap<OrderDetail, OrderDetailDTO>().ReverseMap();
-           
+            CreateMap<Role, RoleDTO>().ReverseMap();
+
+
 
 
 
