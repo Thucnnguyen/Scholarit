@@ -18,7 +18,21 @@ namespace Scholarit.Service.ServiceImp
             return newRoleId;
         }
 
-        public async Task<Role> GetRoleById(int id)
+        public async Task<bool> DeleteRole(int id)
+        {
+            var role = await _roleRepo.FindOneByCondition(u => u.Id == id && u.IsDeleted == false);
+
+            if (role == null)
+            {
+                throw new NotFoundException("Roles not found with id: " + id);
+            }
+
+            role.IsDeleted = true;
+            await _roleRepo.UpdateAsync(role);
+            return true;
+        }
+
+        public async Task<Role?> GetRoleById(int id)
         {
             var role = await _roleRepo.FindOneByCondition(r => r.Id == id);
             return role != null ? role : throw new NotFoundException("Role not found with id: " + id) ;

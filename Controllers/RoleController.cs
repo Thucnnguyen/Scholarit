@@ -47,5 +47,18 @@ namespace Scholarit.Controllers
           
 
         }
+
+        [HttpDelete("{id}")]  // its mean update isdeleted = false
+        public async Task<IActionResult> DeleteRole([FromRoute] int id)
+        {
+            var existRole = await _service.GetRoleById(id);
+            if (existRole == null) return NotFound("Not found user");
+
+            var isdelete = await _service.DeleteRole(id);
+            if (isdelete == false) return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Delete Failed. Error Server." });
+
+
+            return Ok("Delete successful");
+        }
     }
 }
