@@ -24,23 +24,8 @@ namespace Scholarit.Controllers
             _mapper = mapper;
         }
 
-        // GET: api/<CourseController>
-        [HttpGet]
-        public async Task<ActionResult<PagingResultDTO<CourseDTO>>> Get(
-             [FromQuery, Range(1, int.MaxValue), Required(ErrorMessage = "pageNo is Required")] int pageNo = 1,
-            [FromQuery, Range(1, int.MaxValue), Required(ErrorMessage = "pageSize is Required")] int pageSize = 10
-            )
-        {
-            var courseList = await _service.GetAllCourses(pageNo, pageSize);
-            var courseListDTO = courseList.Items.Select(_ => _mapper.Map<CourseDTO>(_));
-            return Ok(new PagingResultDTO<CourseDTO>()
-            {
-                CurrentPage = courseList.CurrentPage,
-                PageSize = courseList.PageSize,
-                Items = courseListDTO.ToList(),
-                TotalItems = courseList.TotalItems
-            });
-        }
+
+
 
         // GET api/<CourseController>/5
         [HttpGet("{id}")]
@@ -77,6 +62,42 @@ namespace Scholarit.Controllers
         {
             var check = await _service.DeleteCourse(id);
             return Ok(check);
+        }
+
+
+        [HttpGet("by-category/{categoryId}")]
+        public async Task<ActionResult<PagingResultDTO<CourseDTO>>> GetByCategoryAsync([FromRoute] int categoryId,
+             [FromQuery, Range(1, int.MaxValue), Required(ErrorMessage = "pageNo is Required")] int pageNo = 1,
+          [FromQuery, Range(1, int.MaxValue), Required(ErrorMessage = "pageSize is Required")] int pageSize = 10
+            )
+        {
+            var courseList = await _service.GetAllCoursesByCategory(categoryId, pageNo, pageSize);
+            var courseListDTO = courseList.Items.Select(_ => _mapper.Map<CourseDTO>(_));
+            return Ok(new PagingResultDTO<CourseDTO>()
+            {
+                CurrentPage = courseList.CurrentPage,
+                PageSize = courseList.PageSize,
+                Items = courseListDTO.ToList(),
+                TotalItems = courseList.TotalItems
+            });
+
+        }
+        // GET: api/<CourseController>
+        [HttpGet]
+        public async Task<ActionResult<PagingResultDTO<CourseDTO>>> Get(
+           [FromQuery, Range(1, int.MaxValue), Required(ErrorMessage = "pageNo is Required")] int pageNo = 1,
+          [FromQuery, Range(1, int.MaxValue), Required(ErrorMessage = "pageSize is Required")] int pageSize = 10
+          )
+        {
+            var courseList = await _service.GetAllCourses(pageNo, pageSize);
+            var courseListDTO = courseList.Items.Select(_ => _mapper.Map<CourseDTO>(_));
+            return Ok(new PagingResultDTO<CourseDTO>()
+            {
+                CurrentPage = courseList.CurrentPage,
+                PageSize = courseList.PageSize,
+                Items = courseListDTO.ToList(),
+                TotalItems = courseList.TotalItems
+            });
         }
     }
 }

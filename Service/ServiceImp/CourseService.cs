@@ -36,6 +36,12 @@ namespace Scholarit.Service.ServiceImp
             return courseList;
         }
 
+        public Task<PagingResultDTO<Course>> GetAllCoursesByCategory(int categoryId, int pageNo, int pageSize)
+        {
+            var courseList = _repo.GetAllByConditionAsync(pageNo, pageSize, c => !c.IsDeleted && c.CategoryId == categoryId, c => c.DateCreated, true);
+            return courseList;
+        }
+
         public async Task<Course> GetCourseByID(int id)
         {
             var course = await _repo.FindOneByCondition(c =>c.Id == id && c.IsDeleted == false);
