@@ -1,9 +1,12 @@
-﻿using AlumniProject.Ultils;
+﻿using AlumniProject.Dto;
+using AlumniProject.Ultils;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Scholarit.DTO;
 using Scholarit.Entity;
 using Scholarit.Service;
+using Scholarit.Service.ServiceImp;
+using System.ComponentModel.DataAnnotations;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -74,6 +77,22 @@ namespace Scholarit.Controllers
         {
             var result = await _userService.GetAllAsync();
             return Ok(_mapper.Map<List<UserDto>>(result));
+        }
+        [HttpGet("page")]  // list all user isdelete = false with paging
+        public async Task<ActionResult<PagingResultDTO<UserDto>>> Get(
+             [FromQuery, Range(1, int.MaxValue), Required(ErrorMessage = "pageNo is Required")] int pageNo = 1,
+            [FromQuery, Range(1, int.MaxValue), Required(ErrorMessage = "pageSize is Required")] int pageSize = 10
+            )
+        {
+            var userList = await _userService.GetAllUsers(pageNo, pageSize);
+            var userListDTO = userList.Items.Select(_ => _mapper.Map<UserDto>(_));
+            return Ok(new PagingResultDTO<UserDto>()
+            {
+                CurrentPage = userList.CurrentPage,
+                PageSize = userList.PageSize,
+                Items = userListDTO.ToList(),
+                TotalItems = userList.TotalItems
+            });
         }
     }
 }

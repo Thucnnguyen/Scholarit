@@ -1,4 +1,5 @@
-﻿using AlumniProject.ExceptionHandler;
+﻿using AlumniProject.Dto;
+using AlumniProject.ExceptionHandler;
 using Scholarit.Data.Repository;
 using Scholarit.Entity;
 using Scholarit.Utils;
@@ -50,6 +51,12 @@ namespace Scholarit.Service.ServiceImp
             var users = await _repo.GetAllAsync();
             var result = users.Where(existingUser => existingUser.IsDeleted == false);      
             return result;
+        }
+
+        public async Task<PagingResultDTO<Users>> GetAllUsers(int pageNo, int pageSize)
+        {
+            var users = await _repo.GetPaginationAsync(pageNo, pageSize);
+            return users;
         }
 
         public async Task<Users> GetUsers(string email, string password)

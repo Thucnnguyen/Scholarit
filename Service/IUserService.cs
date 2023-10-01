@@ -5,6 +5,7 @@ namespace Scholarit.Service
 {
     public interface IUserService
     {
+        Task<PagingResultDTO<Users>> GetAllUsers(int pageNo, int pageSize);
         Task<Users> GetUsers(string email, string password);
         Task<Users> GetUsersByEmail(string email);
         Task<Users> GetUsersById(int id);
