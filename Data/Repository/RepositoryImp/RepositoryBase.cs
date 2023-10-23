@@ -48,14 +48,10 @@ namespace AlumniProject.Data.Repostitory.RepositoryImp
             await _context.SaveChangesAsync();
         }
 
-        public async Task<T> FindOneByCondition(params Expression<Func<T, bool>>[] filters)
+        public async Task<T> FindOneByCondition(Expression<Func<T, bool>> filters)
         {
             var query = _context.Set<T>().AsQueryable();
-
-            foreach (var filter in filters)
-            {
-                query = query.Where(filter);
-            }
+            query = query.Where(filters);
             var entities = await query.FirstOrDefaultAsync();
             return entities;
 
@@ -200,14 +196,12 @@ namespace AlumniProject.Data.Repostitory.RepositoryImp
             return entities;
         }
 
-        public async Task<T> FindOneByCondition(Expression<Func<T, bool>> filter, params Expression<Func<T, object>>[] includeProperties)
+        public async Task<T> FindOneByCondition(Expression<Func<T, bool>> filter, Expression<Func<T, object>> includeProperties)
         {
             var query = _context.Set<T>().AsQueryable();
 
-            foreach (var includeProperty in includeProperties)
-            {
-                query = query.Include(includeProperty);
-            }
+            
+                query = query.Include(includeProperties);
 
             query = query.Where(filter);
 

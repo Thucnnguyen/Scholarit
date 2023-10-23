@@ -12,6 +12,8 @@
         public string? CoverImgUrl { get; set; }
         public int CategoryId { get; set; }
 
+        public int View {  get; set; }= 0;
+
         public virtual Category Category { get; set; }
         public virtual ICollection<Chapter> Chapter { get; set; }
         public virtual ICollection<Enroll> Enroll { get; set; }

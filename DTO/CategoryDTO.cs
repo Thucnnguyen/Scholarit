@@ -9,5 +9,7 @@ namespace Scholarit.DTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
-    }
+        public int TotalCourse { get; set; }
+
+	}
 }

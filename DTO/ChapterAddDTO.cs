@@ -8,5 +8,7 @@
         public int Duration { get; set; }
         public int Order { get; set; }
         public int CourseId { get; set; }
-    }
+		public string? Intro { get; set; }
+		public string? Summary { get; set; }
+	}
 }

@@ -27,9 +27,18 @@ namespace Scholarit.Utils
             CreateMap<ResourceDTO, Resource>().ReverseMap();
             CreateMap<ResourceAddDTO, Resource>().ReverseMap();
             CreateMap<ResourceUpdateDTO, Resource>().ReverseMap();
+            CreateMap<QuestionAddDTO, Question>().ReverseMap();
+            CreateMap<QuestionForAdminDTO, Question>().ReverseMap();
+            CreateMap<QuestionUpdateDTO, Question>().ReverseMap();
+            CreateMap<QuestionDTO, Question>().ReverseMap();
+            CreateMap<QuizAddDTO,Quiz>().ReverseMap();
+            CreateMap<QuizDTO, Quiz>().ReverseMap();
+            CreateMap<QuizAttempDTO, QuizAttempt>().ReverseMap();
+            CreateMap<QuizAttemptQuestionDTO, QuizAttemptQuestion>().ReverseMap();
+            CreateMap<OrderDTO, Order>().ReverseMap();
 
 
-
+            //CreateMap<QuizAttemptAddOrUpdateDTO, quizat>();
 
         }
     }

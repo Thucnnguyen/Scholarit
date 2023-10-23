@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Scholarit.Data;
 using Scholarit.Data.Repository;
 using Scholarit.Data.Repository.RepositoryImp;
 using Scholarit.ExceptionHandler;
 using Scholarit.Service;
 using Scholarit.Service.ServiceImp;
+using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -64,20 +66,37 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
         };
     });
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    {
+        Description = "Standard Authorization header using the Bearer scheme (example: bearer {Token})",
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+    });
+    options.OperationFilter<SecurityRequirementsOperationFilter>();
 
+});
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
 
 app.UseHttpsRedirection();
 
+app.UseCors(builder =>
+{
+    builder.AllowAnyHeader();
+    builder.AllowAnyMethod();
+    builder.AllowAnyOrigin();
+});
+
 app.UseMiddleware(typeof(ExceptionMiddlewareExtensions));
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

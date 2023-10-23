@@ -6,7 +6,7 @@
         public int UserId { get; set; }
         public int Attempt { get; set; }
         public int Score { get; set; }
-        public DateTime LastAttempt { get; set; }
+        public DateTime LastAttempt { get; set; } = DateTime.Now;
 
 
         public virtual Quiz Quiz { get; set; }

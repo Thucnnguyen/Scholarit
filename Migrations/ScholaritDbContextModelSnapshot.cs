@@ -55,6 +55,9 @@ namespace Scholarit.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TotalCourse")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Category");
@@ -84,6 +87,9 @@ namespace Scholarit.Migrations
                     b.Property<int>("Duration")
                         .HasColumnType("int");
 
+                    b.Property<string>("Intro")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -93,6 +99,9 @@ namespace Scholarit.Migrations
 
                     b.Property<int>("Order")
                         .HasColumnType("int");
+
+                    b.Property<string>("Summary")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -143,6 +152,9 @@ namespace Scholarit.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
+                    b.Property<int>("View")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
@@ -158,7 +170,8 @@ namespace Scholarit.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("ChapterId")
+                    b.Property<int?>("ChapterId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("CourseId")
@@ -170,8 +183,10 @@ namespace Scholarit.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsFinished")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Note")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("OrderDetailId")
@@ -207,8 +222,8 @@ namespace Scholarit.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Note")
-                        .HasColumnType("int");
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
@@ -283,8 +298,9 @@ namespace Scholarit.Migrations
                     b.Property<DateTime?>("DateCreated")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Difficult")
-                        .HasColumnType("int");
+                    b.Property<string>("Difficult")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -420,11 +436,16 @@ namespace Scholarit.Migrations
                     b.Property<int>("QuizAttemptId")
                         .HasColumnType("int");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("QuestionId");
 
                     b.HasIndex("QuizAttemptId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("QuizAttemptQuestion");
                 });
@@ -559,6 +580,9 @@ namespace Scholarit.Migrations
 
                     b.Property<int?>("LearnHourPerDay")
                         .HasColumnType("int");
+
+                    b.Property<string>("OTP")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -723,9 +747,17 @@ namespace Scholarit.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Scholarit.Entity.Users", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Question");
 
                     b.Navigation("QuizAttempt");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Scholarit.Entity.QuizQuestion", b =>

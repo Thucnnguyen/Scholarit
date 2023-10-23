@@ -4,7 +4,7 @@ using Scholarit.Entity;
 
 namespace Scholarit.Service.ServiceImp
 {
-    public class CategoryService : ICategoryService
+	public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepo _repo;
         public CategoryService(ICategoryRepo categoryRepo)
@@ -45,5 +45,12 @@ namespace Scholarit.Service.ServiceImp
              await _repo.UpdateAsync(cate);
             return category;
         }
-    }
+
+		public async Task updateTotalCourseCateogry(int cateogryId , int count)
+		{
+			var cate = await GetCategoryByID(cateogryId);
+            cate.TotalCourse += count;
+			await _repo.UpdateAsync(cate);
+		}
+	}
 }

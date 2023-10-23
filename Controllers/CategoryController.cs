@@ -1,14 +1,16 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Scholarit.DTO;
 using Scholarit.Entity;
 using Scholarit.Service;
+using System.Data;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Scholarit.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
@@ -21,15 +23,15 @@ namespace Scholarit.Controllers
         }
 
         // GET: api/<CategoryController>
-        [HttpGet]
+        [HttpGet("user/category")]
         public async Task<ActionResult<IEnumerable<CategoryDTO>>> Get()
         {
             var categories = await _service.GetAll(false);
-            return Ok(categories.Select(_ => _mapper.Map<CategoryAddDTO>(_)));
+            return Ok(categories.Select(_ => _mapper.Map<CategoryDTO>(_)));
         }
 
         // GET api/<CategoryController>/5
-        [HttpGet("{id}")]
+        [HttpGet("user/category/{id}")]
         public async Task<ActionResult<CategoryDTO>> Get([FromRoute] int id)
         {
             var categories = await _service.GetCategoryByID(id);
@@ -37,7 +39,7 @@ namespace Scholarit.Controllers
         }
 
         // POST api/<CategoryController>
-        [HttpPost]
+        [HttpPost("admin/category"), Authorize(Roles = "admin")]
         public async Task<ActionResult<int>> Post([FromBody] CategoryAddDTO categoryAddDTO)
         {
             var category = _mapper.Map<Category>(categoryAddDTO);
@@ -45,7 +47,7 @@ namespace Scholarit.Controllers
         }
 
         // PUT api/<CategoryController>/5
-        [HttpPut()]
+        [HttpPut("admin/category"), Authorize(Roles = "admin")]
         public async Task<ActionResult<Category>> Put( [FromBody] CategoryUpdateDTO categoryUpdateDTO)
         {
             var categoryUpdate = await _service.UpdateCategory(_mapper.Map<Category>(categoryUpdateDTO));
@@ -53,7 +55,7 @@ namespace Scholarit.Controllers
         }
 
         // DELETE api/<CategoryController>/5
-        [HttpDelete("{id}")]
+        [HttpDelete("admin/category/{id}"), Authorize(Roles = "admin")]
         public async Task<ActionResult<bool>> Delete(int id)
         {
             var check = await _service.DeleteCategory(id);

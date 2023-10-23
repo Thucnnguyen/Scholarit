@@ -19,10 +19,9 @@ namespace Scholarit.Service.ServiceImp
 
         public async Task<int> AddResource(Resource resource)
         {
-            var chapter = await _chapterService.GetChapterByID(resource.ChapterId);
             if (resource.ResourceParentId != null)
             {
-                var parentReource = await _repo.FindOneByCondition(r => r.Id == resource.ResourceParentId && !r.IsDeleted);
+                var parentReource = await GetById(resource.ResourceParentId.Value);
                 if(parentReource.ChapterId != resource.ChapterId)
                 {
                     throw new ConflictException("child resource is not the same chapter with parent resouce");

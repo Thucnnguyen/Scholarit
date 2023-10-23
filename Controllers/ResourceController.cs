@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Scholarit.DTO;
 using Scholarit.Entity;
 using Scholarit.Service;
+using System.Data;
 using System.Security.Cryptography.X509Certificates;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -22,15 +24,15 @@ namespace Scholarit.Controllers
         }
 
         // GET: api/<ResourceController>
-        [HttpGet("chapter/{chapterId}/resource")]
-        public async Task<ActionResult<IEnumerable<ResourceDTO>>> GetByChapterId([FromRoute]int ChapterId)
+        [HttpGet("user/chapter/{chapterId}/resource"), Authorize(Roles = "admin,user")]
+        public async Task<ActionResult<IEnumerable<ResourceDTO>>> GetByChapterId([FromRoute]int chapterId)
         {
-            var resourceList = await _service.GetByChapterId(ChapterId);
+            var resourceList = await _service.GetByChapterId(chapterId);
             return Ok(resourceList.Select(r => _mapper.Map<ResourceDTO>(r)));
         }
 
         // GET api/<ResourceController>/5
-        [HttpGet("resource/{id}")]
+        [HttpGet("user/resource/{id}"), Authorize(Roles = "admin,user")]
         public async Task<ActionResult<ResourceDTO>> Get(int id)
         {
             var ExisitingResource = await _service.GetById(id);
@@ -39,7 +41,7 @@ namespace Scholarit.Controllers
         }
 
         // POST api/<ResourceController>
-        [HttpPost("resource")]
+        [HttpPost("admin/resource"), Authorize(Roles = "admin")]
         public async Task<ActionResult<int>> Post([FromBody] ResourceAddDTO resourceAddDTO)
         {
             var newId = await _service.AddResource(_mapper.Map<Resource>(resourceAddDTO));
@@ -47,7 +49,7 @@ namespace Scholarit.Controllers
         }
 
         // PUT api/<ResourceController>/5
-        [HttpPut("resource")]
+        [HttpPut("admin/resource"), Authorize(Roles = "admin")]
         public async Task<ActionResult<ResourceDTO>> Put([FromBody] ResourceUpdateDTO resourceUpdateDTO)
         {
             var resouce = await _service.UpdateResource(_mapper.Map<Resource>(resourceUpdateDTO));
@@ -55,7 +57,7 @@ namespace Scholarit.Controllers
         }
 
         // DELETE api/<ResourceController>/5
-        [HttpDelete("resource/{id}")]
+        [HttpDelete("admin/resource/{id}"), Authorize(Roles = "admin")]
         public async Task<ActionResult<bool>> Delete(int id)
         {
             var resource = await _service.DeleteResource(id);

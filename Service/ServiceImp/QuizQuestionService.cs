@@ -31,6 +31,16 @@ namespace Scholarit.Service.ServiceImp
             return true;
         }
 
+        public async Task<bool> DeleteQuizQuestionByQuizId(int quizId)
+        {
+            var quizQuestionList = await _repo.GetAllByConditionAsync(qq => qq.QuizId == quizId,qq =>qq.Order, false);
+            foreach(var quizQuestion in quizQuestionList)
+            {
+                await _repo.DeleteByIdAsync(quizQuestion.Id);
+            }
+            return true;
+        }
+
         public async Task<IEnumerable<QuizQuestion>> GetAllBy(int quizQuestionId)
         {
             var quizQuestionList = await _repo.GetAllByConditionAsync(qq => qq.QuizId == quizQuestionId && !qq.IsDeleted, qq => qq.Order, false);

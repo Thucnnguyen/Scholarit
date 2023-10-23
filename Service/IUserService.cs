@@ -11,6 +11,11 @@ namespace Scholarit.Service
         Task<Users> UpdateUsers(Users users);
         Task<bool> DeleteUsers(int id);
         Task<int> AddUsers(Users users);
+        Task<PagingResultDTO<Users>> GetAllUsers(int pageNo,int pageSize);
+        Task<Users> CreateOTP(string email);
+        Task<bool> CheckOTP(checkOTPDTO checkOTPDTO);
+        Task<bool> ChangePassword (ChangePasswordDTO changePasswordDTO);
+
 
     }
 }

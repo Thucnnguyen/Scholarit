@@ -1,4 +1,5 @@
 ﻿using AlumniProject.Dto;
+using Scholarit.DTO;
 using Scholarit.Entity;
 
 namespace Scholarit.Service
@@ -8,9 +9,9 @@ namespace Scholarit.Service
         Task<PagingResultDTO<QuizAttempt>> GetAllByUserId(int pageNo, int pageSize, bool desdescending, int userId);
         Task<QuizAttempt> UpdateQuizAttempt(QuizAttempt quizAttempt);
         Task<bool> DeleteQuizAttemptById(int id);
-        Task<int> AddQuizAttempt(QuizAttempt quiz);
+        Task<QuizAttempDTO> AddQuizAttempt(QuizAttemptAddOrUpdateDTO quiz,int userId);
         Task<QuizAttempt> GetQuizAttemptByID(int id);
-        Task<QuizAttempt> GetQuizAttemptByUserIdAndQuizId(int UserId, int QuizId);
+        Task<QuizAttempDTO> GetQuizAttemptByUserIdAndQuizId(int UserId, int QuizId);
 
     }
 }

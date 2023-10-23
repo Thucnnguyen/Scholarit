@@ -10,5 +10,6 @@ namespace Scholarit.Service
         Task<bool> DeleteCategory(int id);
         Task<int> AddCategory(Category category);
         Task<Category> GetCategoryByID (int id);
+        Task updateTotalCourseCateogry(int cateogryId, int count);
     }
 }

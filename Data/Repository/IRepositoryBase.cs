@@ -38,8 +38,8 @@ namespace AlumniProject.Data.Repostitory
         Task UpdateAsync(T entity);
         Task DeleteByIdAsync(int id);
         Task<T> GetByIdAsync( params Expression<Func<T, bool>>[] filters);
-        Task<T> FindOneByCondition(params Expression<Func<T, bool>>[] filters);
-        Task<T> FindOneByCondition( Expression<Func<T, bool>> filters, params Expression<Func<T, object>>[] includeProperties);
+        Task<T> FindOneByCondition( Expression<Func<T, bool>> filters);
+        Task<T> FindOneByCondition( Expression<Func<T, bool>> filters, Expression<Func<T, object>> includeProperties);
 
         Task<int> CountByCondition(params Expression<Func<T, bool>>[] filters);
         Task CreateRangeAsync(List<T> entities);
